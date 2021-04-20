@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>level editor</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div>
+            <label for="height">height:</label>
+            <input type="number" name="height" id="height" />
+            <label for="width">width:</label>
+            <input type="number" name="width" id="width" />
+            <label for="tileType">type:</label>
+            <input type="tile" name="tileType" id="tileType" />
+        </div>
+        <div>
+            <button onclick="load()">reload</button>
+            <button onclick="print()">print</button>
+        </div>
+        <div class="centered" id="tileMap"></div>
+        <div>
+            <p id="output"></p>
+        </div>
+        <script src="scripts/load.js"></script>
+    </body>
+</html>

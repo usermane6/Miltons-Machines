@@ -1,0 +1,18 @@
+div {
+    margin: 10px;
+}
+
+.centered {
+    text-align: center;
+    display: inline-grid;
+}
+
+.tileBase {
+    height: 100px;
+    width: 100px;
+}
+
+.tile1 {
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
