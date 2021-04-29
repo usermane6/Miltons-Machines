@@ -1,0 +1,43 @@
+body {
+    margin-top: 50px;
+    background-color: rgb(73, 73, 73);
+}
+
+button {
+    height: 100px;
+    width: 100px;
+    border: 0px;
+    margin: 7px 7px 7px 7px;
+    border-radius: 20px;
+}
+
+button:focus {
+    outline: none;
+    filter: invert(25%);
+    animation-name: press;
+    animation-duration: 250ms;
+}
+
+@keyframes press {
+    50% {
+        margin: 2px 2px 2px 2px;
+        height: 106px;
+        width: 106px;
+    }
+}
+
+.centered {
+    margin: auto;
+    text-align: center;
+    display: inline-grid;
+}
+
+.tileBase {
+    height: 100px;
+    width: 100px;
+}
+
+.tile1 {
+    grid-row-start: 1;
+    grid-row-end: 2;
+}

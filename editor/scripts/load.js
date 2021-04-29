@@ -35,7 +35,7 @@ function print() {
 
         for (var j = 0; j < width; j++) {
             let data = document.getElementById(`${i}, ${j}`).innerHTML;
-            level[i].push(data);
+            level[i].push(`\"${data}\"`);
         }
 
         levelString = levelString + `[${level[i].toString()}],`;
