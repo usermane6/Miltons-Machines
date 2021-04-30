@@ -21,9 +21,11 @@ function load() {
 }
 
 function editButton(x, y) {
-    document.getElementById(`${x}, ${y}`).innerHTML = document.getElementById(
+    document.getElementById(`${x}, ${y}`).style.backgroundColor = document.getElementById(
         "tileType"
     ).value;
+
+    document.getElementById(`${x}, ${y}`).innerHTML = document.getElementById("tileType").value
 }
 
 function print() {
@@ -43,4 +45,12 @@ function print() {
 
     levelString = levelString.substring(0, levelString.length - 1) + "]";
     document.getElementById("output").innerHTML = levelString;
+}
+
+function fill() {
+    for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+            editButton(i, j)            
+        }
+    }
 }

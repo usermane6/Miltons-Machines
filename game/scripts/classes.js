@@ -1,8 +1,3 @@
-let global = {
-    currentLevel: 0,
-    grayTilesleft: 0,
-};
-
 class level {
     constructor(tileMap, lvlNum) {
         this.tileMap = [];
@@ -12,30 +7,31 @@ class level {
     }
 
     interpret() {
-        console.log(this.realTileMap)
         let classTemplate, currentTile;
         this.tileMap = [];
         for (var i = 0; i < this.realTileMap.length; i++) {
-            this.tileMap.push([])
+            this.tileMap.push([]);
             for (var j = 0; j < this.realTileMap[i].length; j++) {
                 currentTile = this.realTileMap[i][j];
                 if (currentTile != "") {
                     classTemplate = `new ${currentTile}Tile(${i}, ${j})`;
-                    
+
                     classTemplate = eval(classTemplate);
                     this.tileMap[i].push(classTemplate);
                 } else {
                     this.tileMap[i][j] = new blackTile(i, j);
                 }
             }
-            //this.tileMap.push(this.tileMap[i])
         }
-        console.log(this.tileMap);
         this.isInterpreted = true;
     }
 
     display(isInitialSpawn = true) {
-        if(isInitialSpawn) {this.interpret();}
+        document.getElementById("continue").disabled = true;
+
+        if (isInitialSpawn) {
+            this.interpret();
+        }
         (global.grayTilesleft = 0), (global.currentLevel = this.lvlNum);
 
         const container = document.getElementById("container");
@@ -45,7 +41,7 @@ class level {
                 const newTile = document.createElement("button");
 
                 newTile.setAttribute("id", `${i}, ${j}`);
-                newTile.setAttribute("class", `tile${i + 1} tileBase`);
+                newTile.setAttribute("class", `tile${i + 1}`);
                 newTile.setAttribute("onclick", `activate(${i}, ${j})`);
 
                 newTile.style.backgroundColor = this.tileMap[i][j].id;
@@ -56,98 +52,128 @@ class level {
     }
 
     checkWinStates() {
+        global.grayTilesleft = 0;
         for (let i = 0; i < this.tileMap.length; i++) {
-            this.tileMap[i].includes(grayTile);
+            for (let j = 0; j < this.tileMap[i].length; j++) {
+                if (this.tileMap[i][j].id == "gray") {
+                    global.grayTilesleft++;
+                }
+            }
+        }
+
+        if (global.grayTilesleft == 0) {
+            document.getElementById("continue").disabled = false;
         }
     }
 }
 
 class tile {
-    constructor(xPos, yPos) {
+    constructor(xPos, yPos, secondary) {
         this.xPos = xPos;
         this.yPos = yPos;
-    }
-
-    display() {
-        displayTile = document.getElementById(`${this.xPos}, ${this.yPos}`);
-        displayTile.className = "";
-        displayTile.style.backgroundColor = this.id;
-        displayTile.setAttribute("class", `tile${this.xPos + 1} tileBase`);
+        this.secondary = secondary;
     }
 
     interact() {}
 }
 
 class blackTile extends tile {
-    constructor(xPos, yPos) {
-        super(xPos, yPos);
+    constructor(xPos, yPos, secondary) {
+        super(xPos, yPos, secondary);
         this.id = "black";
     }
 }
 
 class grayTile extends tile {
-    constructor(xPos, yPos) {
-        super(xPos, yPos);
+    constructor(xPos, yPos, secondary) {
+        super(xPos, yPos, secondary);
         this.id = "gray";
+        this.effectiveType = "gray"
+    }
+}
+
+class brownTile extends tile {
+    constructor(xPos, yPos, secondary) {
+        super(xPos, yPos, secondary);
+        this.id = "brown";
+        this.effectiveType = "gray"
     }
 }
 
 class whiteTile extends tile {
-    constructor(xPos, yPos) {
-        super(xPos, yPos);
+    constructor(xPos, yPos, secondary = "white") {
+        super(xPos, yPos, secondary);
         this.id = "white";
     }
 
     interact() {
         let currentLevel = levels[`level${global.currentLevel}`];
-
-        for (let i = 0; i < currentLevel.tileMap[0].length; i++) {
-            if (currentLevel.tileMap[this.xPos][this.yPos + i].id != "gray") {
-                break;
+        for (let i = -1; i < 2; i++) {
+            for (let j = -1; j < 2; j++) {
+                check(i, j, this);
             }
-            currentLevel.tileMap[this.xPos][this.yPos + i] = new whiteTile(
-                this.xPos,
-                this.yPos + i
-            );
         }
 
-        for (let i = 1; i < currentLevel.tileMap[0].length; i++) {
-            if (currentLevel.tileMap[this.xPos][this.yPos - i].id != "gray") {
-                break;
+        function check(xMod, yMod, tile) {
+            if (
+                xMod == yMod ||
+                xMod + yMod == 0 ||
+                xMod + yMod == -2 ||
+                xMod + yMod == 2
+            ) {
+                return;
             }
-            currentLevel.tileMap[this.xPos][this.yPos - i] = new whiteTile(
-                this.xPos,
-                this.yPos - i
-            );
-        }
-
-        for (let i = 1; i < currentLevel.tileMap.length; i++) {
-            if (currentLevel.tileMap[this.xPos + i][this.yPos].id != "gray") {
-                break;
+            for (let i = 1; i < currentLevel.tileMap[0].length; i++) {
+                if (
+                    tile.xPos + xMod * i < 0 ||
+                    tile.xPos + xMod * i >= currentLevel.tileMap.length
+                ) {
+                    break;
+                }
+                if (
+                    tile.yPos + yMod * i < 0 ||
+                    tile.yPos + yMod * i >= currentLevel.tileMap[0].length
+                ) {
+                    break;
+                }
+                console.log(tile.yPos + yMod + i, tile.xPos + xMod * i);
+                if (
+                    currentLevel.tileMap[tile.xPos + xMod * i][
+                        tile.yPos + yMod * i
+                    ].effectiveType != "gray"
+                ) {
+                    break;
+                }
+                currentLevel.tileMap[tile.xPos + xMod * i][
+                    tile.yPos + yMod * i
+                ] = eval(
+                    `new ${tile.secondary}Tile(${tile.xPos + xMod * i}, ${
+                        tile.yPos + yMod * i
+                    })`
+                );
             }
-            currentLevel.tileMap[this.xPos + i][this.yPos] = new whiteTile(
-                this.xPos + i,
-                this.yPos
-            );
-        }
-
-        for (let i = 1; i < currentLevel.tileMap.length; i++) {
-            if (currentLevel.tileMap[this.xPos - i][this.yPos].id != "gray") {
-                break;
-            }
-            currentLevel.tileMap[this.xPos - i][this.yPos] = new whiteTile(
-                this.xPos - i,
-                this.yPos
-            );
         }
     }
 }
 
-function activate(xPos, yPos) {
-    button = document.getElementById(`${xPos}, ${yPos}`);
-    levels[`level${global.currentLevel}`].tileMap[xPos][yPos].interact();
-    levels[`level${global.currentLevel}`].display(false);
-    setTimeout(function () {
-        button.blur();
-    }, 250);
+class redTile extends tile {
+    constructor(xPos, yPos, secondary = "brown") {
+        super(xPos, yPos, secondary);
+        this.id = "red";
+    }
+
+    interact() {
+        let currentLevel = levels[`level${global.currentLevel}`];
+
+        for (let i = -1; i < 2; i++) {
+            for (let j = -1; j < 2; j++) {
+                if (i == 0 && j == 0) {
+                    continue;
+                }
+                currentLevel.tileMap[this.xPos + i][this.yPos + j] = eval(
+                    `new ${this.secondary}Tile(${i}, ${j})`
+                );
+            }
+        }
+    }
 }
