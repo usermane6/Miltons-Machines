@@ -51,3 +51,10 @@ h1 {
     grid-row-start: 1;
     grid-row-end: 2;
 }
+
+.secondary {
+    height: 40px;
+    width: 40px;
+    margin: 15px 15px 15px 15px;   
+    border-radius: 15px;
+}

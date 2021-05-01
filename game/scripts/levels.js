@@ -45,15 +45,31 @@ let levels = {
     ),
     level5: new level(
         [
+            ["black", "black", "black", "black", "black", "black", "black"],
+            [
+                "black",
+                "gray",
+                "gray",
+                "gray",
+                "gray",
+                ["white", " black"],
+                "black",
+            ],
+            ["black", "black", "black", "black", "black", "black", "black"],
+        ],
+        5
+    ),
+    level6: new level(
+        [
             ["black", "black", "black", "black", "black"],
             ["black", "gray", "gray", "gray", "black"],
             ["black", "gray", "red", "gray", "black"],
             ["black", "gray", "gray", "gray", "black"],
             ["black", "black", "black", "black", "black"],
         ],
-        5
+        6
     ),
-    level6: new level(
+    level7: new level(
         [
             ["black", "black", "black", "black", "black", "black", "black"],
             ["black", "gray", "black", "black", "black", "white", "black"],
@@ -61,6 +77,6 @@ let levels = {
             ["black", "gray", "black", "black", "black", "gray", "black"],
             ["black", "black", "black", "black", "black", "black", "black"],
         ],
-        6
+        7
     ),
 };

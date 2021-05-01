@@ -7,20 +7,27 @@ class level {
     }
 
     interpret() {
-        let classTemplate, currentTile;
+        let classTemplate, currentTile, currentSecondary;
+
         this.tileMap = [];
         for (var i = 0; i < this.realTileMap.length; i++) {
             this.tileMap.push([]);
             for (var j = 0; j < this.realTileMap[i].length; j++) {
-                currentTile = this.realTileMap[i][j];
-                if (currentTile != "") {
-                    classTemplate = `new ${currentTile}Tile(${i}, ${j})`;
-
-                    classTemplate = eval(classTemplate);
-                    this.tileMap[i].push(classTemplate);
+                currentSecondary = "";
+                console.log(typeof this.realTileMap[i][j]);
+                if (typeof this.realTileMap[i][j] == "string") {
+                    currentTile = this.realTileMap[i][j];
                 } else {
-                    this.tileMap[i][j] = new blackTile(i, j);
+                    (currentTile = this.realTileMap[i][j][0]),
+                        (currentSecondary = this.realTileMap[i][j][1]);
                 }
+
+                classTemplate = currentSecondary
+                    ? (classTemplate = `new ${currentTile}Tile(${i}, ${j}, "${currentSecondary}")`)
+                    : (classTemplate = `new ${currentTile}Tile(${i}, ${j})`);
+
+                classTemplate = eval(classTemplate);
+                this.tileMap[i].push(classTemplate);
             }
         }
         this.isInterpreted = true;
@@ -47,6 +54,17 @@ class level {
                 newTile.style.backgroundColor = this.tileMap[i][j].id;
 
                 container.appendChild(newTile);
+
+                if (this.tileMap[i][j].id != this.tileMap[i][j].secondary) {
+                    const newSecondary = document.createElement("div") 
+
+                    newSecondary.setAttribute("id", `${i}, ${j}, secondary`)
+                    newSecondary.setAttribute("class", "secondary")
+
+                    newSecondary.style.backgroundColor = this.tileMap[i][j].secondary;
+
+                    newTile.appendChild(newSecondary)
+                }
             }
         }
     }
@@ -88,7 +106,7 @@ class grayTile extends tile {
     constructor(xPos, yPos, secondary) {
         super(xPos, yPos, secondary);
         this.id = "gray";
-        this.effectiveType = "gray"
+        this.effectiveType = "gray";
     }
 }
 
@@ -96,7 +114,7 @@ class brownTile extends tile {
     constructor(xPos, yPos, secondary) {
         super(xPos, yPos, secondary);
         this.id = "brown";
-        this.effectiveType = "gray"
+        this.effectiveType = "gray";
     }
 }
 

@@ -21,11 +21,16 @@ function load() {
 }
 
 function editButton(x, y) {
-    document.getElementById(`${x}, ${y}`).style.backgroundColor = document.getElementById(
-        "tileType"
-    ).value;
+    let button = document.getElementById(`${x}, ${y}`),
+        tile = document.getElementById("tileType").value,
+        secondary = document.getElementById("secondary").value;
+    button.style.backgroundColor = tile;
 
-    document.getElementById(`${x}, ${y}`).innerHTML = document.getElementById("tileType").value
+    if (secondary) {
+        button.innerHTML = `[${tile}, ${secondary}]`;
+    } else {
+        button.innerHTML = tile;
+    }
 }
 
 function print() {
@@ -37,7 +42,17 @@ function print() {
 
         for (var j = 0; j < width; j++) {
             let data = document.getElementById(`${i}, ${j}`).innerHTML;
-            level[i].push(`\"${data}\"`);
+            let holder = "";
+            if (data.includes("[")) {
+                holder += ('["');
+                for (var k = 1; k < data.length - 1; k++) {
+                    data[k] == "," ? holder += ("\", \"") : holder += (data[k]);
+                }
+                holder += "\"]"
+                level[i].push(holder);
+            } else {
+                level[i].push(`\"${data}\"`);
+            }
         }
 
         levelString = levelString + `[${level[i].toString()}],`;
@@ -50,7 +65,7 @@ function print() {
 function fill() {
     for (let i = 0; i < height; i++) {
         for (let j = 0; j < width; j++) {
-            editButton(i, j)            
+            editButton(i, j);
         }
     }
 }
