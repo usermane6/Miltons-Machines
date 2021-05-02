@@ -1,7 +1,8 @@
 class level {
-    constructor(tileMap, lvlNum) {
+    constructor(tileMap, turnCount, lvlNum) {
         this.tileMap = [];
         this.realTileMap = tileMap;
+        this.turnCount = turnCount;
         this.lvlNum = lvlNum;
         this.isInterpreted = false;
     }
@@ -14,7 +15,7 @@ class level {
             this.tileMap.push([]);
             for (var j = 0; j < this.realTileMap[i].length; j++) {
                 currentSecondary = "";
-                console.log(typeof this.realTileMap[i][j]);
+
                 if (typeof this.realTileMap[i][j] == "string") {
                     currentTile = this.realTileMap[i][j];
                 } else {
@@ -34,12 +35,14 @@ class level {
     }
 
     display(isInitialSpawn = true) {
+        global.currentLevel = this.lvlNum;
+
         document.getElementById("continue").disabled = true;
 
         if (isInitialSpawn) {
             this.interpret();
+            global.turnsLeft = this.turnCount;
         }
-        (global.grayTilesleft = 0), (global.currentLevel = this.lvlNum);
 
         const container = document.getElementById("container");
         container.innerHTML = "";
@@ -51,22 +54,26 @@ class level {
                 newTile.setAttribute("class", `tile${i + 1}`);
                 newTile.setAttribute("onclick", `activate(${i}, ${j})`);
 
-                newTile.style.backgroundColor = this.tileMap[i][j].id;
+                newTile.style.backgroundColor = colors[this.tileMap[i][j].id];
 
                 container.appendChild(newTile);
 
                 if (this.tileMap[i][j].id != this.tileMap[i][j].secondary) {
-                    const newSecondary = document.createElement("div") 
+                    const newSecondary = document.createElement("div");
 
-                    newSecondary.setAttribute("id", `${i}, ${j}, secondary`)
-                    newSecondary.setAttribute("class", "secondary")
+                    newSecondary.setAttribute("id", `${i}, ${j}, secondary`);
+                    newSecondary.setAttribute("class", "secondary");
 
-                    newSecondary.style.backgroundColor = this.tileMap[i][j].secondary;
+                    newSecondary.style.backgroundColor =
+                        colors[`${this.tileMap[i][j].secondary}`];
 
-                    newTile.appendChild(newSecondary)
+                    newTile.appendChild(newSecondary);
                 }
             }
         }
+        this.checkWinStates();
+        document.getElementById("header1").innerHTML = global.currentLevel;
+        document.getElementById("header2").innerHTML = global.turnsLeft;
     }
 
     checkWinStates() {
@@ -96,14 +103,14 @@ class tile {
 }
 
 class blackTile extends tile {
-    constructor(xPos, yPos, secondary) {
+    constructor(xPos, yPos, secondary = "black") {
         super(xPos, yPos, secondary);
         this.id = "black";
     }
 }
 
 class grayTile extends tile {
-    constructor(xPos, yPos, secondary) {
+    constructor(xPos, yPos, secondary = "gray") {
         super(xPos, yPos, secondary);
         this.id = "gray";
         this.effectiveType = "gray";
@@ -111,7 +118,7 @@ class grayTile extends tile {
 }
 
 class brownTile extends tile {
-    constructor(xPos, yPos, secondary) {
+    constructor(xPos, yPos, secondary = "brown") {
         super(xPos, yPos, secondary);
         this.id = "brown";
         this.effectiveType = "gray";
@@ -132,7 +139,10 @@ class whiteTile extends tile {
             }
         }
 
+        currentLevel.tileMap[this.xPos][this.yPos] = eval(`new ${this.secondary}Tile(${this.xPos}, ${this.yPos})`)
+
         function check(xMod, yMod, tile) {
+            let x, y;
             if (
                 xMod == yMod ||
                 xMod + yMod == 0 ||
@@ -142,29 +152,28 @@ class whiteTile extends tile {
                 return;
             }
             for (let i = 1; i < currentLevel.tileMap[0].length; i++) {
+
+                x = tile.xPos + xMod * i, y = tile.yPos + yMod * i
+
                 if (
-                    tile.xPos + xMod * i < 0 ||
-                    tile.xPos + xMod * i >= currentLevel.tileMap.length
+                    x < 0 ||
+                    x >= currentLevel.tileMap.length
                 ) {
                     break;
                 }
                 if (
-                    tile.yPos + yMod * i < 0 ||
-                    tile.yPos + yMod * i >= currentLevel.tileMap[0].length
+                    y < 0 ||
+                    y >= currentLevel.tileMap[0].length
                 ) {
                     break;
                 }
-                console.log(tile.yPos + yMod + i, tile.xPos + xMod * i);
+
                 if (
-                    currentLevel.tileMap[tile.xPos + xMod * i][
-                        tile.yPos + yMod * i
-                    ].effectiveType != "gray"
+                    currentLevel.tileMap[x][y].effectiveType != "gray"
                 ) {
                     break;
                 }
-                currentLevel.tileMap[tile.xPos + xMod * i][
-                    tile.yPos + yMod * i
-                ] = eval(
+                currentLevel.tileMap[x][y] = eval(
                     `new ${tile.secondary}Tile(${tile.xPos + xMod * i}, ${
                         tile.yPos + yMod * i
                     })`
@@ -175,7 +184,7 @@ class whiteTile extends tile {
 }
 
 class redTile extends tile {
-    constructor(xPos, yPos, secondary = "brown") {
+    constructor(xPos, yPos, secondary) {
         super(xPos, yPos, secondary);
         this.id = "red";
     }

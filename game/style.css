@@ -1,6 +1,7 @@
 * {
-    font-family: 'Exo', sans-serif; 
+    font-family: 'Patua One', cursive;
     text-align: center;
+    color: rgb(28, 28, 28);
 }
 
 body {
@@ -9,6 +10,7 @@ body {
 }
 
 button {
+    padding: 20px 20px 20px 20px; 
     height: 80px;
     width: 80px;
     border: 0px;
@@ -28,16 +30,23 @@ button:disabled {
 }
 
 h1 {
-    margin-top: 100px;
-    font-size: 250px;
-    color: white;
-    -webkit-text-stroke-width: 10px;
-    -webkit-text-stroke-color: black;
+    color: rgb(245, 237, 237);
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: rgb(77, 77, 77);
+}
+
+h2 {
+    color: rgb(245, 237, 237);
+}
+
+strong {
+    color: rgb(245, 237, 237)
 }
 
 @keyframes press {
     50% {
         margin: 2px 2px 2px 2px;
+        padding: 26px 26px 26px 26px; 
         height: 86px;
         width: 86px;
     }
@@ -47,14 +56,32 @@ h1 {
     display: inline-grid;
 }
 
-.tile1 {
+.tile1 { 
     grid-row-start: 1;
     grid-row-end: 2;
 }
 
+.title {
+    -webkit-text-stroke-width: 5px;
+    margin-top: 100px;
+    font-size: 100px;
+    background-color: rgb(133, 133, 133)
+}
+
 .secondary {
     height: 40px;
-    width: 40px;
-    margin: 15px 15px 15px 15px;   
+    width: 40px; 
     border-radius: 15px;
+}
+
+.text-button {
+    padding: 0px;
+}
+
+.start {
+    width: 200px;
+}
+
+.start:hover {
+    background-color: rgb(133, 133, 133)
 }

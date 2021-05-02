@@ -5,18 +5,37 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Exo:wght@900&display=swap"
-            rel="stylesheet"
-        />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Patua+One&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="style.css" />
-        <title>GAME</title>
+        <title>Machines</title>
     </head>
-    <body onload="levels.level5.display()">
-        <div id="container" class="centered"></div>
-        <br />
-        <button disabled id="continue" onclick="spawnNext()">Continue!</button>
-        <button onclick="replay()">Replay!</button>
+    <body onload="spawnNext()">
+        <div id="game">
+            <h2>level: <strong id="header1"></strong></h2>
+            <h2>Turns left: <strong id="header2"></strong></h2>
+            <div id="container" class="centered"></div>
+            <br />
+            <button
+                disabled
+                id="continue"
+                onclick="spawnNext()"
+                class="text-button"
+            >
+                Continue!
+            </button>
+            <button onclick="replay()" class="text-button">Replay!</button>
+        </div>
+        <div id="note">
+            <img
+                src="images/note1.png"
+                alt="note image"
+                id="note-img"
+                height="600"
+            /><br />
+            <button onclick="spawnNext()" class="text-button">Continue!</button>
+        </div>
         <script src="scripts/variables.js"></script>
         <script src="scripts/classes.js"></script>
         <script src="scripts/levels.js"></script>

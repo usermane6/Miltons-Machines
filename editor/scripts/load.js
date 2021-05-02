@@ -27,7 +27,7 @@ function editButton(x, y) {
     button.style.backgroundColor = tile;
 
     if (secondary) {
-        button.innerHTML = `[${tile}, ${secondary}]`;
+        button.innerHTML = `[${tile},${secondary}]`;
     } else {
         button.innerHTML = tile;
     }
